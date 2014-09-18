@@ -11,6 +11,7 @@ getSumOfArray = function(numArray) {
     for (var i = numArray.length - 1; i >= 0; i--) {
         sum += numArray[i];
     };
+    
     return sum;
 }
 
