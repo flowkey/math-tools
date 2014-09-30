@@ -11,7 +11,7 @@ getSumOfArray = function(numArray) {
     for (var i = numArray.length - 1; i >= 0; i--) {
         sum += numArray[i];
     };
-    
+
     return sum;
 }
 
@@ -39,21 +39,45 @@ median = function(numArray) {
         return (sortedArray[half - 1] + sortedArray[half]) / 2.0;
 }
 
-variance = function(numArray){
+firstQuartile = function(numArray) {
+    var sortedArray = flashSort(numArray);
+    var half = Math.floor(sortedArray.length / 2);
+    // if (sortedArray.length % 2)
+    if (sortedArray.length & 1)
+        return sortedArray[half];
+    else
+        return (sortedArray[half - 1] + sortedArray[half]) * 0.25;
+}
+
+thirdQuartile = function(numArray) {
+    var sortedArray = flashSort(numArray);
+    var half = Math.floor(sortedArray.length / 2);
+    // if (sortedArray.length % 2)
+    if (sortedArray.length & 1)
+        return sortedArray[half];
+    else
+        return (sortedArray[half - 1] + sortedArray[half]) * 0.75;
+}
+
+interQuartileRange = function(numArray){
+    return thirdQuartile(numArray) - firstQuartile(numArray);
+}
+
+variance = function(numArray) {
     // if( !isArray(numArr) ){ return false; }
-    var meanValue = mean(numArray), 
+    var meanValue = mean(numArray),
         i = numArray.length,
         v = 0;
-    while( i-- ){
-        v += Math.pow( (numArray[ i ] - meanValue), 2 );
+    while (i--) {
+        v += Math.pow((numArray[i] - meanValue), 2);
     }
     v /= numArray.length;
     return v;
 }
 
-standardDeviation = function(numArray){
+standardDeviation = function(numArray) {
     // if( !isArray(numArr) ){ return false; }
-    var stdDev = Math.sqrt( variance( numArray ) );
+    var stdDev = Math.sqrt(variance(numArray));
     return stdDev;
 }
 

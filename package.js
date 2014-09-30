@@ -18,6 +18,9 @@ Package.onUse(function(api) {
      'getFreq',
      'mean',
      'median',
+     'firstQuartile',
+     'thirdQuartile',
+     'interQuartileRange',
      'variance',
      'standardDeviation',
      'createLinearSpace']);
