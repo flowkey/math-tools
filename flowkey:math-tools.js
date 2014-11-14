@@ -1,9 +1,25 @@
 getMaxOfArray = function(numArray) {
-    return Math.max.apply(null, numArray);
+    // return Math.max.apply(null, numArray);
+
+    var max = -Infinity;
+    for (var i = 0; i < numArray.length; i++) {
+        if (max < numArray[i]) {
+            max = numArray[i];
+        }
+    }
+    return max;
 }
 
 getMinOfArray = function(numArray) {
-    return Math.min.apply(null, numArray);
+    // return Math.min.apply(null, numArray);
+
+    var min = +Infinity;
+    for (var i = 0; i < numArray.length; i++) {
+        if (min > numArray[i]) {
+            min = numArray[i];
+        }
+    }
+    return min;
 }
 
 getSumOfArray = function(numArray) {
@@ -30,7 +46,8 @@ mean = function(numArray) {
 }
 
 median = function(numArray) {
-    var sortedArray = flashSort(numArray);
+    // always remember to hard copy the array when flashSorting
+    var sortedArray = flashSort(numArray.slice());
     var half = Math.floor(sortedArray.length / 2);
     // if (sortedArray.length % 2)
     if (sortedArray.length & 1)
@@ -40,7 +57,8 @@ median = function(numArray) {
 }
 
 firstQuartile = function(numArray) {
-    var sortedArray = flashSort(numArray);
+    // always remember to hard copy the array when flashSorting
+    var sortedArray = flashSort(numArray.slice());
     var half = Math.floor(sortedArray.length / 2);
     // if (sortedArray.length % 2)
     if (sortedArray.length & 1)
@@ -50,7 +68,8 @@ firstQuartile = function(numArray) {
 }
 
 thirdQuartile = function(numArray) {
-    var sortedArray = flashSort(numArray);
+    // always remember to hard copy the array when flashSorting
+    var sortedArray = flashSort(numArray.slice());
     var half = Math.floor(sortedArray.length / 2);
     // if (sortedArray.length % 2)
     if (sortedArray.length & 1)
@@ -59,7 +78,7 @@ thirdQuartile = function(numArray) {
         return (sortedArray[half - 1] + sortedArray[half]) * 0.75;
 }
 
-interQuartileRange = function(numArray){
+interQuartileRange = function(numArray) {
     return thirdQuartile(numArray) - firstQuartile(numArray);
 }
 
