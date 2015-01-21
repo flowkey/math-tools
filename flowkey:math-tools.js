@@ -31,6 +31,15 @@ getSumOfArray = function(numArray) {
     return sum;
 }
 
+getAbsSumOfArray = function(numArray){
+    var sum = 0;
+    for (var i = numArray.length - 1; i >= 0; i--) {
+        sum += Math.abs(numArray[i]);
+    };
+
+    return sum;
+}
+
 copyArray = function(arr) {
     return arr.slice();
 }

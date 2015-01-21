@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Some optimized mathematical operations for your meteor packages",
-  version: "0.0.5",
+  version: "0.0.6",
   git: "https://github.com/flowkey/math-tools.git"
 });
 
@@ -13,6 +13,7 @@ Package.onUse(function(api) {
      'copyArray',
      'getMinOfArray',
      'getSumOfArray',
+     'getAbsSumOfArray',
      'getBin',
      'flashsort',
      'getFreq',
