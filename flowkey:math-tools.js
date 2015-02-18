@@ -1,3 +1,41 @@
+/*
+ * creates an array and inits it with all elements to 0
+ */
+zArray = function(length) {
+    var zArray = new Array(length);
+    var zLength = length;
+    while (zLength--) {
+        zArray[zLength] = 0;
+    }
+    return zArray;
+}
+
+
+/*
+ * some audio related operations
+ */
+decibelToLinear = function(decibelValue) {
+    return Math.pow(10, (decibelValue / 20));
+}
+
+linearToDecibel = function(linearValue) {
+    return 20 * Math.log(linearValue) / Math.LN10;
+}
+
+getBin = function(p, factor, K, fs) {
+    var bin = Math.round(factor * p * K / fs);
+    return bin;
+}
+
+getFreq = function(bin, K, fs) {
+    var freq = fs / K * bin
+    return freq;
+}
+
+
+/*
+ * some operations on arrays
+ */
 getMaxOfArray = function(numArray) {
     // return Math.max.apply(null, numArray);
 
@@ -109,17 +147,6 @@ standardDeviation = function(numArray) {
     return stdDev;
 }
 
-getBin = function(p, factor, K, fs) {
-    var bin = Math.round(factor * p * K / fs);
-    return bin;
-}
-
-
-getFreq = function(bin, K, fs) {
-    var freq = fs / K * bin
-    return freq;
-}
-
 
 /*
  * creates an array with the size of n, values linear between a and b
@@ -135,14 +162,4 @@ createLinearSpace = function(a, b, n) {
         ret[i] = (i * b + (n - i) * a) / n;
     }
     return ret;
-}
-
-
-zArray = function(length) {
-    var zArray = new Array(length);
-    var zLength = length;
-    while (zLength--) {
-        zArray[zLength] = 0;
-    }
-    return zArray;
 }

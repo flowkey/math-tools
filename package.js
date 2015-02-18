@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Some optimized mathematical operations for your meteor packages",
-  version: "0.0.6",
+  version: "0.0.7",
   git: "https://github.com/flowkey/math-tools.git"
 });
 
@@ -8,7 +8,10 @@ Package.onUse(function(api) {
   api.addFiles('flowkey:math-tools.js','client');
   api.add_files(['flashsort.js'], 'client');
 
-    api.export(['zArray',
+    api.export([
+     'zArray',
+     'linearToDecibel',
+     'decibelToLinear',
      'getMaxOfArray',
      'copyArray',
      'getMinOfArray',
