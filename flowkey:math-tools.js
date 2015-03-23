@@ -15,7 +15,7 @@ zArray = function(length) {
  * some audio related operations
  */
 decibelToLinear = function(decibelValue) {
-    return Math.pow(10, (decibelValue / 20));
+    return Math.pow(10, (decibelValue * 0.05));
 }
 
 linearToDecibel = function(linearValue) {
@@ -36,6 +36,17 @@ getFreq = function(bin, K, fs) {
 /*
  * some operations on arrays
  */
+getRmsOfArray = function(numArray){
+    var rms = 0;
+    for (var i = numArray.length - 1; i >= 0; i--) {
+        rms += numArray[i] * numArray[i];
+    };
+    rms = rms / numArray.length;
+    rms = Math.sqrt(rms);
+
+    return rms
+}
+
 getMaxOfArray = function(numArray) {
     // return Math.max.apply(null, numArray);
 
@@ -69,7 +80,7 @@ getSumOfArray = function(numArray) {
     return sum;
 }
 
-getAbsSumOfArray = function(numArray){
+getAbsSumOfArray = function(numArray) {
     var sum = 0;
     for (var i = numArray.length - 1; i >= 0; i--) {
         sum += Math.abs(numArray[i]);
@@ -162,4 +173,25 @@ createLinearSpace = function(a, b, n) {
         ret[i] = (i * b + (n - i) * a) / n;
     }
     return ret;
+}
+
+
+/*
+ * calculates a mappingElementCountVector for normalizing elements of another vector L, which was mapped from a bigger vector  K
+ * (know what I mean?)
+ * parameter k: length of vector K
+ * parameter l: length of vector L
+ */
+calculateMappingElementCountVector = function(k, l) {
+    var elementCountVector = new Array(l);
+    var base = Math.floor(k / l);
+    var limit = k - l * (Math.floor(k / l));
+
+    for (var i = 1; i <= l; i++) {
+        elementCountVector[i - 1] = base;
+        if (i <= limit) {
+            elementCountVector[i - 1] += 1;
+        }
+    };
+    return elementCountVector;
 }
