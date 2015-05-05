@@ -22,12 +22,51 @@ linearToDecibel = function(linearValue) {
     return 20 * Math.log(linearValue) / Math.LN10;
 }
 
-getBin = function(p, factor, K, fs) {
-    var bin = Math.round(factor * p * K / fs);
+centToFrequencyRatio = function(cent) {
+    return Math.pow(2, cent / 100 / 12);
+}
+
+frequencyRatioToCent = function(q) {
+    return 1200 * (Math.log(q) / Math.log(2))
+}
+
+midiToFrequency = function(n, tuningRef) {
+    return (Math.pow(2, (n - 69) / 12) * tuningRef);
+}
+
+frequencyToMidi = function(frequency, tuningRef) {
+    return Math.round(69 + 12 * Math.log(frequency / tuningRef) / Math.log(2));
+}
+
+/**
+   @function calculateBinFromFrequency - calculates the cosine similarity between two vectors with the same length
+    @param {array} freq - frequency
+    @param {array} factor - adjustment factor for frequency ( e.g. a frequency ratio )
+    @param {array} sampleRate - sampleRate used for the signal before FFT
+    @param {array} fftSize - the length of an input frame for the FFT
+
+    @return {integer} - represents the corresponding bin number of the input frequency
+*/
+calculateBinFromFrequency = function(freq, factor, sampleRate, fftSize) {
+    var bin = Math.round(factor * freq * fftSize / sampleRate);
+    return bin;
+}
+
+
+calculateFrequencyFromBin = function(bin, sampleRate, fftSize) {
+    var freq = sampleRate / fftSize * bin
+    return freq;
+}
+
+// deprectad, use calculateBinFromFrequency
+getBin = function(freq, factor, fftSize, sampleRate) {
+    console.warn("getBin() is deprecated, use calculateBinFromFrequency() instead");
+    var bin = Math.round(factor * freq * fftSize / sampleRate * 2);
     return bin;
 }
 
 getFreq = function(bin, K, fs) {
+    console.warn("getFreq() is deprecated, use calculateFrequencyFromBin() instead");
     var freq = fs / K * bin
     return freq;
 }
@@ -36,7 +75,7 @@ getFreq = function(bin, K, fs) {
 /*
  * some operations on arrays
  */
-getRmsOfArray = function(numArray){
+getRmsOfArray = function(numArray) {
     var rms = 0;
     for (var i = numArray.length - 1; i >= 0; i--) {
         rms += numArray[i] * numArray[i];
