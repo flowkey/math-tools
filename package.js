@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Some optimized mathematical operations for your meteor packages",
-  version: "0.0.8",
+  version: "0.0.9",
   git: "https://github.com/flowkey/math-tools.git"
 });
 
