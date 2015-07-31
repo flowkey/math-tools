@@ -1,49 +1,49 @@
 /*
  * some audio related operations
  */
-decibelToLinear = function(decibelValue) {
+decibelToLinear = function (decibelValue) {
     return Math.pow(10, (decibelValue * 0.05));
 }
 
-linearToDecibel = function(linearValue) {
+linearToDecibel = function (linearValue) {
     return 20 * Math.log(linearValue) / Math.LN10;
 }
 
-centToFrequencyRatio = function(cent) {
+centToFrequencyRatio = function (cent) {
     return Math.pow(2, cent / 100 / 12);
 }
 
-frequencyRatioToCent = function(q) {
+frequencyRatioToCent = function (q) {
     return 1200 * (Math.log(q) / Math.log(2))
 }
 
-midiToFrequency = function(n, tuningRef) {
+midiToFrequency = function (n, tuningRef) {
     return (Math.pow(2, (n - 69) / 12) * tuningRef);
 }
 
-frequencyToMidi = function(frequency, tuningRef) {
+frequencyToMidi = function (frequency, tuningRef) {
     return Math.round(69 + 12 * Math.log(frequency / tuningRef) / Math.log(2));
 }
 
-calculateBinFromFrequency = function(freq, factor, sampleRate, fftSize) {
+calculateBinFromFrequency = function (freq, factor, sampleRate, fftSize) {
     var bin = Math.round(factor * freq * fftSize / sampleRate);
     return bin;
 }
 
-calculateFrequencyFromBin = function(bin, sampleRate, fftSize) {
+calculateFrequencyFromBin = function (bin, sampleRate, fftSize) {
     var freq = sampleRate / fftSize * bin
     return freq;
 }
 
 // deprectad, use calculateBinFromFrequency
-getBin = function(freq, factor, fftSize, sampleRate) {
+getBin = function (freq, factor, fftSize, sampleRate) {
     console.warn("getBin() is deprecated, use calculateBinFromFrequency() instead");
     var bin = Math.round(factor * freq * fftSize / sampleRate * 2);
     return bin;
 }
 
 // deprecated, use calculateFrequencyFrimBin
-getFreq = function(bin, K, fs) {
+getFreq = function (bin, K, fs) {
     console.warn("getFreq() is deprecated, use calculateFrequencyFromBin() instead");
     var freq = fs / K * bin
     return freq;
@@ -53,8 +53,8 @@ getFreq = function(bin, K, fs) {
 /*
  * some operations on arrays
  */
- 
-zArray = function(length) {
+
+zArray = function (length) {
     var zArray = new Array(length);
     var zLength = length;
     while (zLength--) {
@@ -63,24 +63,44 @@ zArray = function(length) {
     return zArray;
 }
 
-getMinMaxFromMatrix = function(matrix) {
-  var max = -Infinity;
-  var min = Infinity
-  for (var x = 0; x < matrix.length; x++) {
-    var vector = matrix[x];
-    for (var y = 0; y < vector.length; y++) {
-      var value = vector[y];
-      if (value > max) max = value;
-      if (value < min) min = value;
+getMinMaxFromMatrix = function (matrix) {
+    var max = -Infinity;
+    var min = Infinity
+    for (var x = 0; x < matrix.length; x++) {
+        var vector = matrix[x];
+        for (var y = 0; y < vector.length; y++) {
+            var value = vector[y];
+            if (value > max) max = value;
+            if (value < min) min = value;
+        }
     }
-  }
-  return {
-    min: min,
-    max: max,
-  };
+    return {
+        min: min,
+        max: max,
+    };
 }
 
-getRmsOfArray = function(numArray) {
+getMeanOfMatrix = function (matrix) {
+
+    var matrixHeight = matrix[0].length;
+    var meanVector = new zArray(matrixHeight);
+
+    for (var i = matrix.length - 1; i >= 0; i--) {
+        var currentVector = matrix[i];
+        for (var j = currentVector.length - 1; j >= 0; j--) {
+            var value = currentVector[j];
+            meanVector[j] += currentVector[j];
+        };
+    };
+
+    for (var i = meanVector.length - 1; i >= 0; i--) {
+        meanVector[i] = meanVector[i] / matrix.length;
+    };
+
+    return meanVector;
+}
+
+getRmsOfArray = function (numArray) {
     var rms = 0;
     for (var i = numArray.length - 1; i >= 0; i--) {
         rms += numArray[i] * numArray[i];
@@ -91,7 +111,7 @@ getRmsOfArray = function(numArray) {
     return rms
 }
 
-getMaxOfArray = function(numArray) {
+getMaxOfArray = function (numArray) {
     // return Math.max.apply(null, numArray);
 
     var max = -Infinity;
@@ -103,7 +123,7 @@ getMaxOfArray = function(numArray) {
     return max;
 }
 
-getMinOfArray = function(numArray) {
+getMinOfArray = function (numArray) {
     // return Math.min.apply(null, numArray);
 
     var min = +Infinity;
@@ -115,7 +135,7 @@ getMinOfArray = function(numArray) {
     return min;
 }
 
-getSumOfArray = function(numArray) {
+getSumOfArray = function (numArray) {
     var sum = 0;
     for (var i = numArray.length - 1; i >= 0; i--) {
         sum += numArray[i];
@@ -124,7 +144,7 @@ getSumOfArray = function(numArray) {
     return sum;
 }
 
-getAbsSumOfArray = function(numArray) {
+getAbsSumOfArray = function (numArray) {
     var sum = 0;
     for (var i = numArray.length - 1; i >= 0; i--) {
         sum += Math.abs(numArray[i]);
@@ -135,11 +155,11 @@ getAbsSumOfArray = function(numArray) {
 
 
 
-copyArray = function(arr) {
+copyArray = function (arr) {
     return arr.slice();
 }
 
-mean = function(numArray) {
+mean = function (numArray) {
     var sum = 0;
     for (var i = numArray.length - 1; i >= 0; i--) {
         sum += numArray[i];
@@ -149,7 +169,7 @@ mean = function(numArray) {
     return mean;
 }
 
-median = function(numArray) {
+median = function (numArray) {
     // always remember to hard copy the array when flashSorting
     var sortedArray = flashSort(numArray.slice());
     var half = Math.floor(sortedArray.length / 2);
@@ -160,7 +180,7 @@ median = function(numArray) {
         return (sortedArray[half - 1] + sortedArray[half]) / 2.0;
 }
 
-firstQuartile = function(numArray) {
+firstQuartile = function (numArray) {
     // always remember to hard copy the array when flashSorting
     var sortedArray = flashSort(numArray.slice());
     var half = Math.floor(sortedArray.length / 2);
@@ -171,7 +191,7 @@ firstQuartile = function(numArray) {
         return (sortedArray[half - 1] + sortedArray[half]) * 0.25;
 }
 
-thirdQuartile = function(numArray) {
+thirdQuartile = function (numArray) {
     // always remember to hard copy the array when flashSorting
     var sortedArray = flashSort(numArray.slice());
     var half = Math.floor(sortedArray.length / 2);
@@ -182,11 +202,11 @@ thirdQuartile = function(numArray) {
         return (sortedArray[half - 1] + sortedArray[half]) * 0.75;
 }
 
-interQuartileRange = function(numArray) {
+interQuartileRange = function (numArray) {
     return thirdQuartile(numArray) - firstQuartile(numArray);
 }
 
-variance = function(numArray) {
+variance = function (numArray) {
     // if( !isArray(numArr) ){ return false; }
     var meanValue = mean(numArray),
         i = numArray.length,
@@ -198,14 +218,14 @@ variance = function(numArray) {
     return v;
 }
 
-standardDeviation = function(numArray) {
+standardDeviation = function (numArray) {
     // if( !isArray(numArr) ){ return false; }
     var stdDev = Math.sqrt(variance(numArray));
     return stdDev;
 }
 
-isLocalExtreme = function(findMinimum, numArray, checkPos) {
-    return _.reduce(numArray, function(isTrueSoFar, number, i) {
+isLocalExtreme = function (findMinimum, numArray, checkPos) {
+    return _.reduce(numArray, function (isTrueSoFar, number, i) {
 
         if (!isTrueSoFar) {
             return false;
@@ -230,7 +250,7 @@ isLocalExtreme = function(findMinimum, numArray, checkPos) {
 /*
  * creates an array with the size of n, values linear between a and b
  */
-createLinearSpace = function(a, b, n) {
+createLinearSpace = function (a, b, n) {
     if (typeof n === "undefined") n = Math.max(Math.round(b - a) + 1, 1);
     if (n < 2) {
         return n === 1 ? [a] : [];
@@ -250,7 +270,7 @@ createLinearSpace = function(a, b, n) {
  * parameter k: length of vector K
  * parameter l: length of vector L
  */
-calculateMappingElementCountVector = function(k, l) {
+calculateMappingElementCountVector = function (k, l) {
     var elementCountVector = new Array(l);
     var base = Math.floor(k / l);
     var limit = k - l * (Math.floor(k / l));
