@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Some optimized mathematical operations for your meteor packages",
-  version: "0.0.9",
+  version: "0.0.9.1",
   git: "https://github.com/flowkey/math-tools.git"
 });
 
@@ -10,6 +10,7 @@ Package.onUse(function(api) {
 
     api.export([
      'zArray',
+     'getMinMaxFromMatrix',
      'linearToDecibel',
      'decibelToLinear',
      'getRmsOfArray',
@@ -34,6 +35,7 @@ Package.onUse(function(api) {
      'interQuartileRange',
      'variance',
      'standardDeviation',
+     'isLocalExtreme',
      'createLinearSpace',
      'calculateMappingElementCountVector']);
 });

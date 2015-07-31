@@ -1,17 +1,4 @@
 /*
- * creates an array and inits it with all elements to 0
- */
-zArray = function(length) {
-    var zArray = new Array(length);
-    var zLength = length;
-    while (zLength--) {
-        zArray[zLength] = 0;
-    }
-    return zArray;
-}
-
-
-/*
  * some audio related operations
  */
 decibelToLinear = function(decibelValue) {
@@ -38,20 +25,10 @@ frequencyToMidi = function(frequency, tuningRef) {
     return Math.round(69 + 12 * Math.log(frequency / tuningRef) / Math.log(2));
 }
 
-/**
-   @function calculateBinFromFrequency - calculates the cosine similarity between two vectors with the same length
-    @param {array} freq - frequency
-    @param {array} factor - adjustment factor for frequency ( e.g. a frequency ratio )
-    @param {array} sampleRate - sampleRate used for the signal before FFT
-    @param {array} fftSize - the length of an input frame for the FFT
-
-    @return {integer} - represents the corresponding bin number of the input frequency
-*/
 calculateBinFromFrequency = function(freq, factor, sampleRate, fftSize) {
     var bin = Math.round(factor * freq * fftSize / sampleRate);
     return bin;
 }
-
 
 calculateFrequencyFromBin = function(bin, sampleRate, fftSize) {
     var freq = sampleRate / fftSize * bin
@@ -65,6 +42,7 @@ getBin = function(freq, factor, fftSize, sampleRate) {
     return bin;
 }
 
+// deprecated, use calculateFrequencyFrimBin
 getFreq = function(bin, K, fs) {
     console.warn("getFreq() is deprecated, use calculateFrequencyFromBin() instead");
     var freq = fs / K * bin
@@ -75,6 +53,33 @@ getFreq = function(bin, K, fs) {
 /*
  * some operations on arrays
  */
+ 
+zArray = function(length) {
+    var zArray = new Array(length);
+    var zLength = length;
+    while (zLength--) {
+        zArray[zLength] = 0;
+    }
+    return zArray;
+}
+
+getMinMaxFromMatrix = function(matrix) {
+  var max = -Infinity;
+  var min = Infinity
+  for (var x = 0; x < matrix.length; x++) {
+    var vector = matrix[x];
+    for (var y = 0; y < vector.length; y++) {
+      var value = vector[y];
+      if (value > max) max = value;
+      if (value < min) min = value;
+    }
+  }
+  return {
+    min: min,
+    max: max,
+  };
+}
+
 getRmsOfArray = function(numArray) {
     var rms = 0;
     for (var i = numArray.length - 1; i >= 0; i--) {
@@ -127,6 +132,8 @@ getAbsSumOfArray = function(numArray) {
 
     return sum;
 }
+
+
 
 copyArray = function(arr) {
     return arr.slice();
@@ -195,6 +202,28 @@ standardDeviation = function(numArray) {
     // if( !isArray(numArr) ){ return false; }
     var stdDev = Math.sqrt(variance(numArray));
     return stdDev;
+}
+
+isLocalExtreme = function(findMinimum, numArray, checkPos) {
+    return _.reduce(numArray, function(isTrueSoFar, number, i) {
+
+        if (!isTrueSoFar) {
+            return false;
+        }
+
+        // Avoid array out of bounds:
+        if (i == numArray.length - 1) {
+            return isTrueSoFar;
+        } else if ((findMinimum == true && i < checkPos) || (findMinimum != true && i >= checkPos) == true) {
+            // we should be entering a trough, meaning that the
+            // volume of next block should be less than the current one:
+            return isTrueSoFar && numArray[i + 1] < number;
+        } else {
+            // we are coming out of the trough, volume should be increasing from here..
+            return isTrueSoFar && numArray[i + 1] > number;
+        }
+
+    }, true);
 }
 
 
