@@ -14,7 +14,7 @@ centToFrequencyRatio = function (cent) {
 }
 
 frequencyRatioToCent = function (q) {
-    return 1200 * (Math.log(q) / Math.log(2))
+    return 1200 * (Math.log(q) / Math.log(2));
 }
 
 midiToFrequency = function (n, tuningRef) {
@@ -35,25 +35,11 @@ calculateFrequencyFromBin = function (bin, sampleRate, fftSize) {
     return freq;
 }
 
-// deprectad, use calculateBinFromFrequency
-getBin = function (freq, factor, fftSize, sampleRate) {
-    console.warn("getBin() is deprecated, use calculateBinFromFrequency() instead");
-    var bin = Math.round(factor * freq * fftSize / sampleRate * 2);
-    return bin;
-}
-
-// deprecated, use calculateFrequencyFrimBin
-getFreq = function (bin, K, fs) {
-    console.warn("getFreq() is deprecated, use calculateFrequencyFromBin() instead");
-    var freq = fs / K * bin
-    return freq;
-}
 
 
 /*
  * some operations on arrays
  */
-
 zArray = function (length) {
     var zArray = new Array(length);
     var zLength = length;
@@ -81,7 +67,6 @@ getMinMaxFromMatrix = function (matrix) {
 }
 
 getMeanOfMatrix = function (matrix) {
-
     var matrixHeight = matrix[0].length;
     var meanVector = new zArray(matrixHeight);
 
@@ -184,11 +169,11 @@ firstQuartile = function (numArray) {
     // always remember to hard copy the array when flashSorting
     var sortedArray = flashSort(numArray.slice());
     var half = Math.floor(sortedArray.length / 2);
-    // if (sortedArray.length % 2)
-    if (sortedArray.length & 1)
+    if (sortedArray.length & 1) {
         return sortedArray[half];
-    else
+    } else {
         return (sortedArray[half - 1] + sortedArray[half]) * 0.25;
+    }
 }
 
 thirdQuartile = function (numArray) {
@@ -263,23 +248,13 @@ createLinearSpace = function (a, b, n) {
     return ret;
 }
 
-
 /*
- * calculates a mappingElementCountVector for normalizing elements of another vector L, which was mapped from a bigger vector  K
- * (know what I mean?)
- * parameter k: length of vector K
- * parameter l: length of vector L
+ * timestamps
  */
-calculateMappingElementCountVector = function (k, l) {
-    var elementCountVector = new Array(l);
-    var base = Math.floor(k / l);
-    var limit = k - l * (Math.floor(k / l));
+getTimeInSecondsSince1970 = function () {
+    return Date.now() / 1000;
+}
 
-    for (var i = 1; i <= l; i++) {
-        elementCountVector[i - 1] = base;
-        if (i <= limit) {
-            elementCountVector[i - 1] += 1;
-        }
-    };
-    return elementCountVector;
+getTimeInMillisecondsSince1970 = function () {
+    return Date.now();
 }
